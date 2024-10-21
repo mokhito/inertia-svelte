@@ -1,8 +1,13 @@
+import { page } from '$app/stores';
 import { mergeDataIntoQueryString, router, shouldIntercept } from '@inertiajs/core';
 const link = (node, options = {}) => {
     const [href, data] = hrefAndData(options);
     node.href = href;
     options.data = data;
+    node.dataset.active = "false";
+    const unsubscribePage = page.subscribe((newPage) => {
+        node.dataset.active = (newPage?.url.pathname === href).toString();
+    });
     function fireEvent(name, eventOptions = {}) {
         return node.dispatchEvent(new CustomEvent(name, eventOptions));
     }
@@ -38,6 +43,7 @@ const link = (node, options = {}) => {
         },
         destroy() {
             node.removeEventListener('click', visit);
+            unsubscribePage();
         },
     };
 };
