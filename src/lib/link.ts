@@ -1,3 +1,4 @@
+import { page } from '$app/stores'
 import { mergeDataIntoQueryString, router, shouldIntercept, type VisitOptions } from '@inertiajs/core'
 import type { Action } from 'svelte/action'
 
@@ -11,6 +12,12 @@ const link: Action<ActionElement, ActionParameters> = (node, options = {}) => {
   const [href, data] = hrefAndData(options)
   node.href = href
   options.data = data
+
+  node.dataset.active = "false";
+
+  const unsubscribePage = page.subscribe((newPage) => {
+    node.dataset.active = (newPage?.url.pathname === href).toString()
+  })
 
   function fireEvent(name: string, eventOptions = {}) {
     return node.dispatchEvent(new CustomEvent(name, eventOptions))
@@ -59,6 +66,7 @@ const link: Action<ActionElement, ActionParameters> = (node, options = {}) => {
     },
     destroy() {
       node.removeEventListener('click', visit)
+      unsubscribePage();
     },
   }
 }
