@@ -18,13 +18,15 @@ const link: Action<ActionElement, ActionParameters> = (node, options = {}) => {
   const unsubscribePage = page.subscribe((newPage) => {
     if (!newPage) return;
 
-    node.dataset.active = (newPage.url === href).toString()
+    const targetUrl = new URL(href)
+    node.dataset.active = (newPage.url === targetUrl.pathname).toString()
   })
 
   function fireEvent(name: string, eventOptions = {}) {
     return node.dispatchEvent(new CustomEvent(name, eventOptions))
   }
 
+  // `href` is returned as a full path url (i.e., host + path)
   function hrefAndData(options: ActionParameters) {
     options ??= {};
 

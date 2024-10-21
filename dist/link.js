@@ -8,7 +8,8 @@ const link = (node, options = {}) => {
     const unsubscribePage = page.subscribe((newPage) => {
         if (!newPage)
             return;
-        node.dataset.active = (newPage.url === href).toString();
+        const targetUrl = new URL(href);
+        node.dataset.active = (newPage.url === targetUrl.pathname).toString();
     });
     function fireEvent(name, eventOptions = {}) {
         return node.dispatchEvent(new CustomEvent(name, eventOptions));
