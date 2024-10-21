@@ -1,4 +1,4 @@
-import { page } from '$app/stores'
+import page from './page'
 import { mergeDataIntoQueryString, router, shouldIntercept, type VisitOptions } from '@inertiajs/core'
 import type { Action } from 'svelte/action'
 
@@ -16,7 +16,7 @@ const link: Action<ActionElement, ActionParameters> = (node, options = {}) => {
   node.dataset.active = "false";
 
   const unsubscribePage = page.subscribe((newPage) => {
-    node.dataset.active = (newPage?.url.pathname === href).toString()
+    node.dataset.active = (newPage?.url === href).toString()
   })
 
   function fireEvent(name: string, eventOptions = {}) {
