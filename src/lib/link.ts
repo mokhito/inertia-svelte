@@ -16,7 +16,10 @@ const link: Action<ActionElement, ActionParameters> = (node, options = {}) => {
   node.dataset.active = "false";
 
   const unsubscribePage = page.subscribe((newPage) => {
-    node.dataset.active = (newPage?.url === href).toString()
+    if (!newPage) return;
+
+    const url = new URL(newPage.url)
+    node.dataset.active = (url.pathname === href).toString()
   })
 
   function fireEvent(name: string, eventOptions = {}) {

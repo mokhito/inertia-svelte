@@ -6,7 +6,10 @@ const link = (node, options = {}) => {
     options.data = data;
     node.dataset.active = "false";
     const unsubscribePage = page.subscribe((newPage) => {
-        node.dataset.active = (newPage?.url === href).toString();
+        if (!newPage)
+            return;
+        const url = new URL(newPage.url);
+        node.dataset.active = (url.pathname === href).toString();
     });
     function fireEvent(name, eventOptions = {}) {
         return node.dispatchEvent(new CustomEvent(name, eventOptions));
